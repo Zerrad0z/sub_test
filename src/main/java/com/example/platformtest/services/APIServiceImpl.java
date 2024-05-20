@@ -1,9 +1,10 @@
-package service;
+package com.example.platformtest.services;
 
-import entities.API;
+import com.example.platformtest.entities.API;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class APIServiceImpl implements APIService {
     @Override
     public List<API> getAllAPIs() {
@@ -23,5 +24,10 @@ public class APIServiceImpl implements APIService {
     @Override
     public void deleteAPI(Long apiId) {
 
+    }
+
+    @Override
+    public List<API> findAllApisPaginated(int page, int size) {
+        return List.of();
     }
 }

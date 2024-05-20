@@ -1,8 +1,10 @@
-package entities;
+package com.example.platformtest.entities;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+
+
 
 @Entity
 @Table(name = "Subscription")
@@ -29,6 +31,10 @@ public class Subscription {
     @Column(name = "Statut")
     private boolean statut;
 
+    // Constructors
+    public Subscription() {
+    }
+
     public Subscription(Long subscriptionId, API api, User user, LocalDate startDate, LocalDate endDate, boolean statut) {
         this.subscriptionId = subscriptionId;
         this.api = api;
@@ -38,15 +44,21 @@ public class Subscription {
         this.statut = statut;
     }
 
-    public Subscription() {
-    }
-
+    // Getters and Setters
     public Long getSubscriptionId() {
         return subscriptionId;
     }
 
     public void setSubscriptionId(Long subscriptionId) {
         this.subscriptionId = subscriptionId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public API getApi() {
@@ -80,6 +92,13 @@ public class Subscription {
     public void setStatut(boolean statut) {
         this.statut = statut;
     }
+    @Transient
+    public String getStatus() {
+        LocalDate today = LocalDate.now();
+        if (endDate != null && endDate.isBefore(today)) {
+            return "expired";
+        } else {
+            return "active";
+        }
+    }
 }
-
-

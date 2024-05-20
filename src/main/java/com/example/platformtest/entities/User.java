@@ -1,6 +1,8 @@
-package entities;
+package com.example.platformtest.entities;
 
 import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "User")
@@ -10,11 +12,8 @@ public class User {
     @Column(name = "UserID")
     private Long userId;
 
-    @Column(name = "Nom")
-    private String nom;
-
-    @Column(name = "Prénom")
-    private String prénom;
+    @Column(name = "Username")
+    private String username;
 
     @Column(name = "Email")
     private String email;
@@ -22,23 +21,18 @@ public class User {
     @Column(name = "Password")
     private String password;
 
-    public User(Long userId, String email, String nom, String prénom, String password) {
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
+
+    public User(Long userId, String email, String nom, String password) {
         this.userId = userId;
         this.email = email;
-        this.nom = nom;
-        this.prénom = prénom;
+        this.username = username;
         this.password = password;
     }
 
     public User() {
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Long getUserId() {
@@ -49,20 +43,20 @@ public class User {
         this.userId = userId;
     }
 
-    public String getNom() {
-        return nom;
+    public String getUsername() {
+        return username;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getPrénom() {
-        return prénom;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPrénom(String prénom) {
-        this.prénom = prénom;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -71,5 +65,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

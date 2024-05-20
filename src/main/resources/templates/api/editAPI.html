@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Produits</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="/bootstrap.min.css" th:href="@{/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" href="/style.css" th:href="@{/style.css}"/>
+</head>
+<p> </p>
+<body>
+<div class="col-md-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">Saisie une API</div>
+        <div class="panel-body">
+            <form th:action="@{/save}" method="post">
+                <div class="form-group">
+                    <label class="control-label">ID</label>
+                    <input class="form-control" type="text" name="id" th:value="${api.apiId}" readonly/>
+                    <span class="red" th:errors="${api.apiId}"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Nom</label>
+                    <input class="form-control" type="text" name="nom" th:value="${api.nom}"/>
+                    <span class="red" th:errors="${api.nom}"></span>
+                </div>
+                <div>
+                    <button class="btn btn-primary">Save</button>
+                </div>
+</body>
+</html>

@@ -1,6 +1,6 @@
-package service;
+package com.example.platformtest.services;
 
-import entities.User;
+import com.example.platformtest.entities.User;
 
 import java.util.List;
 

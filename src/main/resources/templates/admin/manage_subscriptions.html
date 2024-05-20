@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Subscriptions</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<section layout:fragment="body">
+    <div class="container my-5">
+        <h2>Manage User Subscriptions</h2>
+        <form th:action="@{/admin/search_subscriptions}" method="get">
+            <div class="form-group">
+                <label for="username">Enter Username:</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <hr>
+
+        <!-- Display user and subscriptions if found -->
+        <div th:if="${user != null}">
+            <h3>User Details:</h3>
+            <p>Username: <span th:text="${user.username}"></span></p>
+
+            <h3>Subscriptions:</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>API Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="subscription : ${subscriptions}">
+                    <td th:text="${subscription.api.name}"></td>
+                    <td th:text="${subscription.startDate}"></td>
+                    <td th:text="${subscription.endDate}"></td>
+                    <td th:text="${subscription.statut ? 'Active' : 'Inactive'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Display error message if user not found -->
+        <div th:if="${errorMessage}">
+            <p th:text="${errorMessage}"></p>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap or other JS frameworks -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</section>
+</body>
+
+</html>

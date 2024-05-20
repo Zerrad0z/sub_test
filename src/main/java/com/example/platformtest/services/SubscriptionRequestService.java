@@ -1,6 +1,6 @@
-package service;
+package com.example.platformtest.services;
 
-import entities.SubscriptionRequest;
+import com.example.platformtest.entities.SubscriptionRequest;
 
 import java.util.List;
 

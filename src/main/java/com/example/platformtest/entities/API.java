@@ -1,4 +1,4 @@
-package entities;
+package com.example.platformtest.entities;
 
 import jakarta.persistence.*;
 
@@ -29,4 +29,11 @@ public class API {
         this.nom = nom;
     }
 
+    public Long getApiId() {
+        return apiId;
+    }
+
+    public void setApiId(Long apiId) {
+        this.apiId = apiId;
+    }
 }

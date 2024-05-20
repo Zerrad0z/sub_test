@@ -1,9 +1,10 @@
-package service;
+package com.example.platformtest.services;
 
-import entities.SubscriptionRequest;
+import com.example.platformtest.entities.SubscriptionRequest;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class SubscriptionRequestServiceImpl implements SubscriptionRequestService {
     @Override
     public List<SubscriptionRequest> getAllSubscriptionRequests() {

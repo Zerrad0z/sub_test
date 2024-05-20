@@ -1,36 +1,98 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>Available APIs</title>
-    <!-- Bootstrap CSS (example) -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>APIs</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
 </head>
 <body>
-<div class="container">
-    <h1>Available APIs</h1>
-    <div th:each="api : ${apis}">
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title" th:text="${api.nom}"></h5>
-                <p class="card-text">API ID: <span th:text="${api.apiId}"></span></p>
-                <a th:href="@{/api/documentation/{apiId}(apiId=${api.apiId})}" class="btn btn-primary">Documentation</a>
-                <a th:href="@{/api/subscribe/{apiId}(apiId=${api.apiId})}" class="btn btn-success ml-2">Subscribe</a>
+<section layout:fragment="body">
+    <div class="container my-5">
+        <form th:action="@{/index}" method="get">
+            <input type="text" name="mc" th:value="${motCle}"/>
+            <button class="btn btn-primary">Chercher</button>
+        </form>
+        <div class="container">
+            <h3>Liste des API</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th><th>Nom</th><th>Prix</th><th>Quantité</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a : ${listAPI}">
+                    <td th:text="${a.apiId}"></td>
+                    <td th:text="${a.nom}"></td>
+                    <!-- Display 'Abonner' and 'Documentation' for non-admin users -->
+                    <td th:unless="${isAdmin}">
+                    <td><a href="#" class="abonner-link" data-toggle="modal" th:data-target="'#myModal-' + ${a.apiId}">Abonner</a></td>
+                    <td><a th:href="@{/documentation}">Documentation</a></td>
+                    </td>
+                    <!-- Display 'Edit' and 'Delete' for admin users -->
+                    <td th:if="${isAdmin}"><a th:href="@{edit(id=${a.apiId})}">Edit</a></td>
+                    <td th:if="${isAdmin}">
+                        <a onclick="return confirm('Etes-vous sure?')" th:href="@{delete(id=${a.apiId},page=${pageCourante},size=${size},motCle=${motCle})}">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="container">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li th:each="pa,status:${pages}" th:class="${pageCourante} == ${status.index} ? 'page-item active' : 'page-item'">
+                        <a class="page-link" th:href="@{index(page=${status.index}, size=${size},mc=${motCle})}" th:text="${status.index}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Modal for Abonner -->
+    <div th:each="a : ${listAPI}" th:id="'myModal-' + ${a.apiId}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Abonner à ${a.nom}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form for subscription -->
+                    <form th:action="@{/subscribe}" method="post">
+                        <div class="mb-3">
+                            <label for="startDate">Date de début:</label>
+                            <input type="date" id="startDate" name="startDate" class="form-control" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="endDate">Date de fin:</label>
+                            <input type="date" id="endDate" name="endDate" class="form-control" required/>
+                        </div>
+                        <input type="hidden" name="apiId" th:value="${a.apiId}"/>
+                        <button type="submit" class="btn btn-primary">S'abonner</button>
+                    </form>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap JS (example) -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
-        integrity="sha384-lB2ib1j19rD8vw6U8k6uZKjl3y9qDdd5SwhjQnW2p1kdlpf0RSa6REXH6F3dFgyD"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-        integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N"
-        crossorigin="anonymous"></script>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Optional: Close modal on submit
+    $('form').on('submit', function () {
+        $(this).closest('.modal').modal('hide');
+    });
+</script>
+
 </body>
 </html>

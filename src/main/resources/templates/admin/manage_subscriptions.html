@@ -35,14 +35,27 @@
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="subscription : ${subscriptions}">
-                    <td th:text="${subscription.api.name}"></td>
+                <tr th:each="subscription, rowStat : ${subscriptions}">
+                    <td th:text="${subscription.api.nom}"></td>
                     <td th:text="${subscription.startDate}"></td>
-                    <td th:text="${subscription.endDate}"></td>
+                    <td>
+                        <input type="date" class="form-control" th:id="'endDate_' + ${rowStat.index}" th:value="${subscription.endDate}" />
+                    </td>
                     <td th:text="${subscription.statut ? 'Active' : 'Inactive'}"></td>
+                    <td>
+                        <form th:action="@{/admin/update_subscription}" method="post">
+                            <input type="hidden" name="subscriptionId" th:value="${subscription.subscriptionId}" />
+                            <button type="submit" class="btn btn-primary btn-sm">Update End Date</button>
+                        </form>
+                        <form th:action="@{/admin/end_subscription}" method="post">
+                            <input type="hidden" name="subscriptionId" th:value="${subscription.subscriptionId}" />
+                            <button type="submit" class="btn btn-danger btn-sm">End Subscription</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>

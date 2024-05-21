@@ -9,4 +9,10 @@ public interface SubscriptionRequestService {
     SubscriptionRequest getSubscriptionRequestById(Long requestId);
     SubscriptionRequest saveSubscriptionRequest(SubscriptionRequest request);
     void deleteSubscriptionRequest(Long requestId);
+
+    void approveSubscriptionRequest(Long requestId);
+
+    void rejectSubscriptionRequest(Long requestId);
+
+    List<SubscriptionRequest> getSubscriptionRequestsByUserAndStatus(Long userId, boolean approved);
 }

@@ -1,25 +1,35 @@
 package com.example.platformtest.controllers;
 
+import com.example.platformtest.entities.SubscriptionRequest;
 import com.example.platformtest.entities.User;
 import com.example.platformtest.repositories.UserRepository;
+import com.example.platformtest.services.SubscriptionRequestService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class UserController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SubscriptionRequestService subscriptionRequestService;
 
     @Autowired
-    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                          SubscriptionRequestService subscriptionRequestService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.subscriptionRequestService = subscriptionRequestService;
     }
 
     @GetMapping("/register")
@@ -35,9 +45,30 @@ public class UserController {
         return "redirect:/login";
     }
 
-
     @GetMapping("/homepage")
     public String home() {
-        return "homepage"; // Ensure you have a homepage.html Thymeleaf template
+        return "homepage";
+    }
+
+    @GetMapping("/subscription_requests")
+    public String getUserSubscriptionRequests(Model model) {
+        User user = getCurrentUser();
+        List<SubscriptionRequest> subscriptionRequests = subscriptionRequestService.getSubscriptionRequestsByUserAndStatus(user.getUserId(), false);
+        model.addAttribute("subscriptionRequests", subscriptionRequests);
+        return "user/user_requests";
+    }
+
+    @GetMapping("/subscription_requests/approved")
+    public ResponseEntity<List<SubscriptionRequest>> getUserApprovedSubscriptionRequests() {
+        User user = getCurrentUser();
+        List<SubscriptionRequest> subscriptionRequests = subscriptionRequestService.getSubscriptionRequestsByUserAndStatus(user.getUserId(), true);
+        return ResponseEntity.ok(subscriptionRequests);
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

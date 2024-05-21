@@ -4,73 +4,55 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "SubscriptionRequest")
 public class SubscriptionRequest {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "RequestID")
-    private Long requestId;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "UserID")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "APIID")
     private API api;
 
-    @ManyToOne
-    @JoinColumn(name = "AdminID")
-    private Admin admin;
-
-    @Column(name = "StartDate")
     private LocalDate startDate;
-
-    @Column(name = "EndDate")
     private LocalDate endDate;
+    private boolean approved;
 
-    public SubscriptionRequest(User user, API api, Admin admin, LocalDate startDate, LocalDate endDate) {
-        this.user = user;
-        this.api = api;
-        this.admin = admin;
-        this.startDate = startDate;
+    public SubscriptionRequest(Long id, boolean approved, LocalDate endDate, LocalDate startDate, API api, User user) {
+        this.id = id;
+        this.approved = approved;
         this.endDate = endDate;
+        this.startDate = startDate;
+        this.api = api;
+        this.user = user;
     }
 
     public SubscriptionRequest() {
     }
 
-    public Long getRequestId() {
-        return requestId;
+    public Long getId() {
+        return id;
     }
 
-    public void setRequestId(Long requestId) {
-        this.requestId = requestId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public boolean isApproved() {
+        return approved;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 
-    public API getApi() {
-        return api;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setApi(API api) {
-        this.api = api;
-    }
-
-    public Admin getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(Admin admin) {
-        this.admin = admin;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public LocalDate getStartDate() {
@@ -81,11 +63,27 @@ public class SubscriptionRequest {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public API getApi() {
+        return api;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setApi(API api) {
+        this.api = api;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public String getStatus() {
+        // Example logic to derive status based on other fields
+        if (approved) {
+            return "Approved";
+        } else {
+            return "Pending";
+        }
     }
 }

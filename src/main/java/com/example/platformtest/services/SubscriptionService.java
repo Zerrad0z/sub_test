@@ -4,8 +4,10 @@ import com.example.platformtest.entities.Subscription;
 import com.example.platformtest.entities.User;
 import com.example.platformtest.repositories.SubscriptionRepository;
 import com.example.platformtest.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -57,6 +59,16 @@ public class SubscriptionService {
         subscription.setStatut(false); // Assuming 'statut' represents the status
         subscriptionRepository.save(subscription);
     }
+    @Transactional
+    public void approveSubscription(Long subscriptionId) {
+        Subscription subscription = subscriptionRepository.findById(subscriptionId)
+                .orElseThrow(() -> new EntityNotFoundException("Subscription not found"));
 
+        subscription.setStatut(true); // or set it to whatever value indicates approval
+        subscriptionRepository.save(subscription);
 
+        // Add logging to verify the method is called and the subscription is saved
+        System.out.println("Approved subscription with ID: " + subscriptionId);
+
+    }
 }

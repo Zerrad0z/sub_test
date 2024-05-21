@@ -3,6 +3,7 @@ package com.example.platformtest.controllers;
 import com.example.platformtest.repositories.APIRepository;
 import com.example.platformtest.entities.API;
 import com.example.platformtest.services.APIService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -59,17 +60,19 @@ public class APIController {
         model.addAttribute("api",new API());
         return "api/apis";
     }
-    @RequestMapping(value = "/edit",method = RequestMethod.GET)
-    public String edit(Model model,Long id){
-        API p=apiRepository.findById(id).get();
-        model.addAttribute("api",p);
-        return "editAPI";
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    public String edit(Model model, Long id) {
+        API api = apiRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("API not found"));
+        model.addAttribute("api", api);
+        return "api/editAPI"; // Make sure this is the correct name of your form view
     }
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
-    public String save(Model model, @Valid API api, BindingResult bindingResult){
-        if(bindingResult.hasErrors())
-            return "formAPI";
-        apiRepository.save(api);
-        return "api/Confirmation";
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public String save(Model model, @Valid API api, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "editAPI"; // Return the form view with error messages
+        }
+        API savedApi = apiService.saveAPI(api);
+        model.addAttribute("api", savedApi);
+        return "api/confirmation"; // Redirect to the confirmation page
     }
 }

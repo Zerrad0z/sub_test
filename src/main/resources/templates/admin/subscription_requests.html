@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Subscription Requests</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<section layout:fragment="body">
+    <div class="container my-5">
+        <h2>Subscription Requests</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>User</th>
+                <th>API</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="request : ${subscriptionRequests}">
+                <td th:text="${request.user.username}"></td>
+                <td th:text="${request.api.nom}"></td>
+                <td th:text="${request.startDate}"></td>
+                <td th:text="${request.endDate}"></td>
+                <td th:text="${request.getStatus()}"></td> <!-- Use getStatus() method -->
+                <td>
+                    <form th:action="@{/admin/approve_request}" method="post">
+                        <input type="hidden" name="requestId" th:value="${request.id}" />
+                        <button type="submit" class="btn btn-success">Approve</button>
+                    </form>
+                    <form th:action="@{/admin/reject_request}" method="post">
+                        <input type="hidden" name="requestId" th:value="${request.id}" />
+                        <button type="submit" class="btn btn-danger">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

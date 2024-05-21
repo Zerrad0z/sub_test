@@ -2,10 +2,13 @@ package com.example.platformtest.controllers;
 
 import com.example.platformtest.entities.API;
 import com.example.platformtest.entities.Subscription;
+import com.example.platformtest.entities.SubscriptionRequest;
 import com.example.platformtest.entities.User;
 import com.example.platformtest.repositories.APIRepository;
+import com.example.platformtest.repositories.SubscriptionRequestRepository;
 import com.example.platformtest.repositories.UserRepository;
 import com.example.platformtest.services.SubscriptionService;
+import org.antlr.v4.runtime.misc.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -25,19 +28,22 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
     private final APIRepository apiRepository;
     private final UserRepository userRepository;
+    private final SubscriptionRequestRepository  subscriptionRequestRepository;
 
     @Autowired
-    public SubscriptionController(SubscriptionService subscriptionService, APIRepository apiRepository, UserRepository userRepository) {
+    public SubscriptionController(SubscriptionService subscriptionService, APIRepository apiRepository, UserRepository userRepository, SubscriptionRequestRepository  subscriptionRequestRepository) {
         this.subscriptionService = subscriptionService;
         this.apiRepository = apiRepository;
         this.userRepository = userRepository;
+        this.subscriptionRequestRepository = subscriptionRequestRepository;
     }
 
-    @PostMapping("/subscribe")
-    public String subscribeToApi(@RequestParam Long apiId,
-                                 @RequestParam("startDate") LocalDate startDate,
-                                 @RequestParam("endDate") LocalDate endDate,
-                                 Principal principal) {
+    // Method to handle subscription requests
+    @PostMapping("/subscribe/request")
+    public String requestSubscription(@RequestParam Long apiId,
+                                      @RequestParam("startDate") LocalDate startDate,
+                                      @RequestParam("endDate") LocalDate endDate,
+                                      Principal principal) {
         // Fetch authenticated user
         User user = fetchAuthenticatedUser(principal);
 
@@ -49,21 +55,21 @@ public class SubscriptionController {
         }
         API api = optionalApi.get();
 
-        // Create new subscription
-        Subscription subscription = new Subscription();
-        subscription.setApi(api);
-        subscription.setUser(user);
-        subscription.setStartDate(startDate);
-        subscription.setEndDate(endDate);
-        subscription.setStatut(true);
+        // Create new subscription request
+        SubscriptionRequest subscriptionRequest = new SubscriptionRequest();
+        subscriptionRequest.setApi(api);
+        subscriptionRequest.setUser(user);
+        subscriptionRequest.setStartDate(startDate);
+        subscriptionRequest.setEndDate(endDate);
 
-        // Save subscription
-        subscriptionService.saveSubscription(subscription);
+        // Save subscription request
+        subscriptionRequestRepository.save(subscriptionRequest);
 
         // Redirect or return appropriate view
-        return "redirect:/index"; // Example redirect to index page after subscription
+        return "redirect:/subscriptions"; // Redirect to subscriptions page or any other relevant page
     }
 
+    // Fetch authenticated user method
     private User fetchAuthenticatedUser(Principal principal) {
         String email = principal.getName(); // Assuming principal contains the email
         return userRepository.findByEmail(email)

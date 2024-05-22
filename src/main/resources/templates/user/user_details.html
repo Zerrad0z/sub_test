@@ -13,20 +13,21 @@
 <section layout:fragment="body">
     <div class="container my-5">
         <h2>User Details</h2>
-        <form th:action="@{/admin/update_user}" method="post">
+        <form th:action="@{/update_user}" method="post">
             <div class="form-group">
                 <label for="username">Username:</label>
-                <input type="text" class="form-control" id="username" name="username" th:value="${user.username}" required>
+                <input type="text" class="form-control" id="username" name="username" th:value="${username}" required>
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" th:value="${user.email}" required>
+                <input type="email" class="form-control" id="email" name="email" th:value="${email}" required>
             </div>
+            <!-- Assuming roles are displayed as text input; adjust as necessary -->
             <div class="form-group">
                 <label for="roles">Roles:</label>
-                <input type="text" class="form-control" id="roles" name="roles" th:value="${user.getRoles}" required>
+                <input type="text" class="form-control" id="roles" name="roles" th:value="${roles}" required>
             </div>
-            <input type="hidden" name="userId" th:value="${user.userId}" />
+            <input type="hidden" name="userId" th:value="${userId}" />
             <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>

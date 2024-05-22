@@ -14,7 +14,6 @@
         <table class="table">
             <thead>
             <tr>
-                <th>User</th>
                 <th>API</th>
                 <th>Start Date</th>
                 <th>End Date</th>
@@ -23,7 +22,6 @@
             </thead>
             <tbody>
             <tr th:each="request : ${subscriptionRequests}">
-                <td th:text="${request.user.username}"></td> <!-- Assuming user has username field -->
                 <td th:text="${request.api.nom}"></td> <!-- Assuming API has nom field for API name -->
                 <td th:text="${request.startDate}"></td>
                 <td th:text="${request.endDate}"></td>

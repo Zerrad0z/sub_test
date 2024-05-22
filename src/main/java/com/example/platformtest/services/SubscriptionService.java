@@ -26,8 +26,10 @@ public class SubscriptionService {
     }
 
     public List<Subscription> getUserSubscriptions(String email) {
+         email = "user1@gmail.com"; // Replace with a valid email from your database
+        String finalEmail = email;
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + finalEmail));
         return subscriptionRepository.findByUser(Optional.ofNullable(user));
     }
 

@@ -32,7 +32,7 @@ public class APIController {
     @GetMapping("index")
     public String index(Model model,
                         @RequestParam(name = "page", defaultValue = "0") int p,
-                        @RequestParam(name = "size", defaultValue = "5") int s,
+                        @RequestParam(name = "size", defaultValue = "10") int s,
                         @RequestParam(name = "mc", defaultValue = "") String mc) {
         Page<API> pageAPI = apiRepository.chercher("%" + mc + "%", PageRequest.of(p, s));
         model.addAttribute("listAPI", pageAPI.getContent());

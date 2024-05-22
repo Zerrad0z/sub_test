@@ -68,12 +68,11 @@ public class SubscriptionController {
         // Redirect or return appropriate view
         return "redirect:/subscriptions"; // Redirect to subscriptions page or any other relevant page
     }
-
     // Fetch authenticated user method
     private User fetchAuthenticatedUser(Principal principal) {
-        String email = principal.getName(); // Assuming principal contains the email
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+        String username = principal.getName(); // Assuming principal contains the username
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
     }
 
     @GetMapping("/subscriptions")

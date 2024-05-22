@@ -4,7 +4,7 @@ import com.example.platformtest.entities.SubscriptionRequest;
 import com.example.platformtest.entities.User;
 import com.example.platformtest.repositories.UserRepository;
 import com.example.platformtest.services.SubscriptionRequestService;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.platformtest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,6 +19,9 @@ import java.util.List;
 
 @Controller
 public class UserController {
+
+    @Autowired
+    private UserService userService;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -71,4 +74,24 @@ public class UserController {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+    @GetMapping("/user/user_details")
+    public String userDetails(Model model) {
+        User currentUser = getCurrentUser();
+        // Do not include password in the model
+        model.addAttribute("username", currentUser.getUsername());
+        model.addAttribute("email", currentUser.getEmail());
+        // Add other necessary attributes
+        return "user/user_details";
+    }
+    @PostMapping("/update_user")
+    public String updateUser(@RequestParam("userId") Long userId,
+                             @RequestParam("username") String username,
+                             @RequestParam("email") String email,
+                             @RequestParam("password") String password) {
+        // Encrypt the password
+        String encryptedPassword = passwordEncoder.encode(password);
+        userService.updateUser(userId, username, email, encryptedPassword);
+        return "redirect:/user/user_details";
+    }
+
 }

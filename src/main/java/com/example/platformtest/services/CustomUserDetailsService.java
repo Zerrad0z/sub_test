@@ -35,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         ) {
             @Override
             public String getUsername() {
-                return user.getUsername(); // Return username (could be name or any other identifier)
+                return user.getUsername();
             }
         };
     }

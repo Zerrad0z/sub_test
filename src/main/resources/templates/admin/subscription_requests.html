@@ -2,15 +2,112 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
+
 <head>
     <meta charset="UTF-8">
     <title>Subscription Requests</title>
+    <!-- Include Bootstrap CSS from a CDN -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sticky-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: #0e2238;
+            z-index: 1000;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+            width: 100%;
+        }
+        .sticky-header h2 {
+            color: white;
+            text-align:;
+            margin: 0;
+            font-size: 24px;
+        }
+        /* Sticky Search Bar */
+        .sticky-search {
+            position: sticky; /* Change to 'sticky' to make it sticky */
+            top: 0;
+            background-color: white;
+            z-index: 1000;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .sticky-search .form-inline {
+            justify-content: center;
+        }
+
+        /* Content Margin Adjustment */
+        .content {
+            margin-top: 80px; /* Adjust margin-top to account for sticky search bar */
+        }
+
+        /* Custom Dropdown Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 12px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {background-color: #f1f1f1}
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
+
 <body>
 <section layout:fragment="body">
-    <div class="container my-5">
-        <h2>Subscription Requests</h2>
+    <!-- Sticky Search Bar -->
+    <div class="sticky-header">
+        <div class="container">
+            <h2>Gerer les demandes</h2>
+        </div>
+    </div>
+    <div class="sticky-search">
+        <div class="container">
+            <form th:action="@{/admin/search_subscriptions}" method="get" class="form-inline">
+                <div class="form-group mb-2">
+                    <label for="username" class="sr-only">Username:</label>
+                    <input type="text" class="form-control mr-2" id="username" name="username" placeholder="Enter Username" required>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container content my-5">
         <table class="table">
             <thead>
             <tr>
@@ -30,22 +127,31 @@
                 <td th:text="${request.endDate}"></td>
                 <td th:text="${request.getStatus()}"></td> <!-- Use getStatus() method -->
                 <td>
-                    <form th:action="@{/admin/approve_request}" method="post">
-                        <input type="hidden" name="requestId" th:value="${request.id}" />
-                        <button type="submit" class="btn btn-success">Approve</button>
-                    </form>
-                    <form th:action="@{/admin/reject_request}" method="post">
-                        <input type="hidden" name="requestId" th:value="${request.id}" />
-                        <button type="submit" class="btn btn-danger">Reject</button>
-                    </form>
+                    <!-- Custom Dropdown -->
+                    <div class="dropdown">
+                        <button class="dropbtn">Actions</button>
+                        <div class="dropdown-content">
+                            <form th:action="@{/admin/approve_request}" method="post" class="dropdown-item">
+                                <input type="hidden" name="requestId" th:value="${request.id}" />
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                            </form>
+                            <form th:action="@{/admin/reject_request}" method="post" class="dropdown-item">
+                                <input type="hidden" name="requestId" th:value="${request.id}" />
+                                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
+                        </div>
+                    </div>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 </section>
+
+<!-- Include jQuery, Popper.js, and Bootstrap JavaScript from CDNs -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

@@ -79,7 +79,7 @@ public class SubscriptionRequest {
         this.user = user;
     }
     public String getStatus() {
-        // Example logic to derive status based on other fields
+
         if (approved) {
             return "Approved";
         } else {

@@ -5,42 +5,107 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Manage Users</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Gerer les utilisateurs</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <style>
+        .sticky-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: #0e2238;
+            z-index: 1000;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+            width: 100%;
+        }
+        .sticky-header h2 {
+            color: white;
+            text-align: center;
+            margin: 0;
+            font-size: 24px;
+        }
+        .sticky-search {
+            padding-top: 60px;
+        }
+        .sticky-search .input-group {
+            max-width: 500px;
+            margin: 10px auto;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .btn-primary, .btn-danger {
+            margin-right: 5px;
+        }
+    </style>
 </head>
 
 <body>
-<section layout:fragment="body">
-    <div class="container my-5">
-        <h2>Manage Users</h2>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Roles</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${user.username}"></td>
-                <td th:text="${user.email}"></td>
-                <td th:text="${user.roles}"></td>
-                <td>
-                    <a th:href="@{/admin/user_details(userId=${user.userId})}" class="btn btn-primary btn-sm">View/Edit</a>
-                    <form th:action="@{/admin/delete_user}" method="post" style="display:inline;">
-                        <input type="hidden" name="userId" th:value="${user.userId}" />
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+<div layout:fragment="body">
+    <div class="sticky-header">
+        <div class="container">
+            <h2>Gerer les utilisateurs</h2>
+        </div>
     </div>
-</section>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <div class="sticky-search">
+        <div class="container">
+            <form th:action="@{/admin/users}" method="get">
+                <div class="input-group">
+                    <input type="text" name="mc" class="form-control" placeholder="Rechercher" th:value="${motCle}">
+                    <button type="submit" class="btn btn-primary">Chercher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container content my-5">
+        <div class="card">
+            <div class="card-body">
+                <h3>Gerer les utilisateurs</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Roles</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${user.roles}"></td>
+                            <td>
+                                <a th:href="@{/admin/user_details(userId=${user.userId})}" class="btn btn-primary btn-sm">View/Edit</a>
+                                <form th:action="@{/admin/delete_user}" method="post" style="display:inline;">
+                                    <input type="hidden" name="userId" th:value="${user.userId}" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-4">
+                <li th:each="page, status : ${pages}" th:class="${pageCourante} == ${status.index} ? 'page-item active' : 'page-item'">
+                    <a class="page-link" th:href="@{/admin/users(page=${status.index}, size=${size}, mc=${motCle})}" th:text="${status.index}"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

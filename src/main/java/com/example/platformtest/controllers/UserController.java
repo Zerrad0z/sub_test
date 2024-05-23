@@ -6,6 +6,8 @@ import com.example.platformtest.repositories.UserRepository;
 import com.example.platformtest.services.SubscriptionRequestService;
 import com.example.platformtest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,6 +63,13 @@ public class UserController {
         return "user/user_requests";
     }
 
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
     @GetMapping("/subscription_requests/approved")
     public ResponseEntity<List<SubscriptionRequest>> getUserApprovedSubscriptionRequests() {
         User user = getCurrentUser();
@@ -68,21 +77,14 @@ public class UserController {
         return ResponseEntity.ok(subscriptionRequests);
     }
 
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
     @GetMapping("/user/user_details")
     public String userDetails(Model model) {
         User currentUser = getCurrentUser();
-        // Do not include password in the model
         model.addAttribute("username", currentUser.getUsername());
         model.addAttribute("email", currentUser.getEmail());
-        // Add other necessary attributes
         return "user/user_details";
     }
+
     @PostMapping("/update_user")
     public String updateUser(@RequestParam("userId") Long userId,
                              @RequestParam("username") String username,
@@ -92,6 +94,21 @@ public class UserController {
         String encryptedPassword = passwordEncoder.encode(password);
         userService.updateUser(userId, username, email, encryptedPassword);
         return "redirect:/user/user_details";
+    }
+    // Search users with pagination
+    @GetMapping("/admin/users")
+    public String searchUsers(Model model,
+                              @RequestParam(name = "page", defaultValue = "0") int page,
+                              @RequestParam(name = "size", defaultValue = "10") int size,
+                              @RequestParam(name = "mc", defaultValue = "") String mc) {
+        Page<User> userPage = userRepository.findByUsernameContaining(mc, PageRequest.of(page, size));
+        model.addAttribute("users", userPage.getContent());
+        int[] pages = new int[userPage.getTotalPages()];
+        model.addAttribute("pages", pages);
+        model.addAttribute("size", size);
+        model.addAttribute("pageCourante", page);
+        model.addAttribute("motCle", mc);
+        return "admin/manage_users";
     }
 
 }

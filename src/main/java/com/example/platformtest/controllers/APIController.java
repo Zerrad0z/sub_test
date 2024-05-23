@@ -50,11 +50,14 @@ public class APIController {
         model.addAttribute("isAdmin", isAdmin);
         return "api/apis";
     }
-    @RequestMapping(value = "/delete",method = RequestMethod.GET)
-    public String delete(Long id,String motCle,int page,int size){
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String delete(Long id, String motCle, Integer page, Integer size) {
         apiRepository.deleteById(id);
-        return "redirect:/index?page="+page+"&size="+size+"&motCle="+motCle;
+        return "redirect:/index?page=" + (page != null ? page : "") +
+                "&size=" + (size != null ? size : "") +
+                "&motCle=" + (motCle != null ? motCle : "");
     }
+
     @RequestMapping(value = "/form",method = RequestMethod.GET)
     public String formApi(Model model){
         model.addAttribute("api",new API());
@@ -64,7 +67,7 @@ public class APIController {
     public String edit(Model model, Long id) {
         API api = apiRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("API not found"));
         model.addAttribute("api", api);
-        return "api/editAPI"; // Make sure this is the correct name of your form view
+        return "api/editAPI";
     }
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Model model, @Valid API api, BindingResult bindingResult) {

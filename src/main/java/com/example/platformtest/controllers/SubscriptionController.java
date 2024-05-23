@@ -8,15 +8,14 @@ import com.example.platformtest.repositories.APIRepository;
 import com.example.platformtest.repositories.SubscriptionRequestRepository;
 import com.example.platformtest.repositories.UserRepository;
 import com.example.platformtest.services.SubscriptionService;
-import org.antlr.v4.runtime.misc.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
@@ -66,11 +65,11 @@ public class SubscriptionController {
         subscriptionRequestRepository.save(subscriptionRequest);
 
         // Redirect or return appropriate view
-        return "redirect:/subscriptions"; // Redirect to subscriptions page or any other relevant page
+        return "redirect:/index"; // Redirect to subscriptions page or any other relevant page
     }
     // Fetch authenticated user method
     private User fetchAuthenticatedUser(Principal principal) {
-        String username = principal.getName(); // Assuming principal contains the username
+        String username = principal.getName();
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
     }
@@ -80,6 +79,16 @@ public class SubscriptionController {
         String email = authentication.getName(); // Get the authenticated user's email
         List<Subscription> subscriptions = subscriptionService.getUserSubscriptions(email);
         model.addAttribute("subscriptions", subscriptions);
-        return "subscriptions"; // The name of your Thymeleaf template
+        return "subscriptions";
     }
+    @GetMapping("/subscription/{id}")
+    public String showSubscriptionDetails(@PathVariable("id") Long id, Model model) {
+        Subscription subscription = subscriptionService.getSubscriptionById(id);
+
+        // Add subscription directly to model
+        model.addAttribute("subscription", subscription);
+
+        return "user/user_requests";
+    }
+
 }

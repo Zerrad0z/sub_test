@@ -24,6 +24,4 @@ public class LoginController {
         model.addAttribute("isAdmin", isAdmin);
         return "login";
     }
-
 }
-

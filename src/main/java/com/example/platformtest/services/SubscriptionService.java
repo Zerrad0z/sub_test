@@ -25,11 +25,9 @@ public class SubscriptionService {
         this.userRepository = userRepository;
     }
 
-    public List<Subscription> getUserSubscriptions(String email) {
-         email = "user1@gmail.com"; // Replace with a valid email from your database
-        String finalEmail = email;
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + finalEmail));
+    public List<Subscription> getUserSubscriptions(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        User user = optionalUser.orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
         return subscriptionRepository.findByUser(Optional.ofNullable(user));
     }
 
@@ -47,12 +45,6 @@ public class SubscriptionService {
     public User findUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
-    }
-    public void updateEndDate(Long subscriptionId, LocalDate newEndDate) {
-        Subscription subscription = subscriptionRepository.findById(subscriptionId)
-                .orElseThrow(() -> new RuntimeException("Subscription not found"));
-        subscription.setEndDate(newEndDate);
-        subscriptionRepository.save(subscription);
     }
 
     public void expireSubscription(Long subscriptionId) {
@@ -72,5 +64,19 @@ public class SubscriptionService {
         // Add logging to verify the method is called and the subscription is saved
         System.out.println("Approved subscription with ID: " + subscriptionId);
 
+    }
+    @Transactional
+    public void updateEndDate(Long subscriptionId, LocalDate newEndDate) {
+        Subscription subscription = subscriptionRepository.findById(subscriptionId)
+                .orElseThrow(() -> new RuntimeException("Subscription not found"));
+
+        subscription.setEndDate(newEndDate);
+        subscriptionRepository.save(subscription);
+
+        System.out.println("Updated subscription with ID: " + subscriptionId);
+    }
+    public Subscription getSubscriptionById(Long subscriptionId) {
+        return subscriptionRepository.findById(subscriptionId)
+                .orElseThrow(() -> new EntityNotFoundException("Subscription not found with ID: " + subscriptionId));
     }
 }

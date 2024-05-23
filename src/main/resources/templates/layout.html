@@ -4,54 +4,105 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">My Web Application</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .navbar-nav .nav-item .dropdown-menu {
-            right: 0;
-            left: auto;
-        }
-    </style>
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
+
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">
-        <img src="logo.png" width="30" height="30" alt="Logo">
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/homepage">Home</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span th:text="${#authentication.name}">Profile Name</span>
+<div class="wrapper">
+    <aside id="sidebar" class="expand">
+        <div class="d-flex">
+            <button class="toggle-btn" type="button">
+                <i class="lni lni-grid-alt"></i>
+            </button>
+            <div class="sidebar-logo">
+                <a href="#">Platform</a>
+            </div>
+        </div>
+        <ul class="sidebar-nav">
+            <li class="sidebar-item">
+                <a href="user/user_details" class="sidebar-link">
+                    <i class="lni lni-user"></i>
+                    <span>Profile</span>
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="user/user_details">Profile</a>
-                    <a class="dropdown-item" href="/subscriptions">Subscriptions</a>
-                    <a class="dropdown-item" th:href="@{/subscription_requests}">Mes Demandes</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" th:href="@{/logout}">Logout</a>
-                </div>
+            </li>
+            <li class="sidebar-item">
+                <a href="/index" class="sidebar-link">
+                    <i class="lni lni-agenda"></i>
+                    <span>Liste des API</span>
+                </a>
+            </li>
+            <!-- Options for regular users -->
+            <li th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}" class="sidebar-item">
+                <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                   data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
+                    <i class="lni lni-layout"></i>
+                    <span>Gerer mes API</span>
+                </a>
+                <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <li class="sidebar-item">
+                        <a href="/subscriptions" class="sidebar-link"><i class="lni lni-users"></i> Mes API</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="/subscription_requests" class="sidebar-link"><i class="lni lni-envelope"></i> Mes demandes</a>
+                    </li>
+                </ul>
+            </li>
+            <!-- Options for admin users -->
+            <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="sidebar-item">
+                <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                   data-bs-target="#admin" aria-expanded="false" aria-controls="admin">
+                    <i class="lni lni-layout"></i>
+                    <span>Administration</span>
+                </a>
+                <ul id="admin" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <li class="sidebar-item">
+                        <a href="/admin/manage_subscriptions" class="sidebar-link"><i class="lni lni-agenda"></i> Gerer les abonnements</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="/admin/manage_users" class="sidebar-link"><i class="lni lni-users"></i> Gerer les utilisateurs</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="/admin/subscription_requests" class="sidebar-link"><i class="lni lni-envelope"></i> Gerer les demandes</a>
+                    </li>
+                </ul>
+            </li>
+            <!-- Common options for both roles -->
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="lni lni-cog"></i>
+                    <span>Settings</span>
+                </a>
             </li>
         </ul>
+        <div class="sidebar-footer">
+            <a href="/logout" class="sidebar-link">
+                <i class="lni lni-exit"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+    <div class="main p-3">
+        <div layout:fragment="body">
+
+        </div>
     </div>
-</nav>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<body layout:fragment="body"></body>
-
-<footer>
-    <p></p>
-</footer>
-
-<!-- Add any JavaScript scripts here -->
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+<script src="/static/script.js"></script>
+</body>
 
 </html>

@@ -26,14 +26,15 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/register", "/login", "/css/**").permitAll()
+                        .requestMatchers("/", "/register", "/login", "/static/**").permitAll()
                         .requestMatchers("/listeDesApi", "/documentations").hasAuthority("ROLE_USER")
                         .requestMatchers("/delete", "/edit").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/abonner").hasAuthority("ROLE_USER")
+                        .requestMatchers("/abonner", "/subscription_requests").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
+                        .loginProcessingUrl("/login") // Ensure the login processing URL is set
                         .defaultSuccessUrl("/homepage", true)
                         .permitAll()
                 )

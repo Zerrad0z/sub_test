@@ -74,8 +74,12 @@ public class AdminController {
                                   RedirectAttributes redirectAttributes) {
         // End the subscription
         subscriptionService.expireSubscription(subscriptionId);
+
+        // Fetch username associated with the subscription
+        String username = subscriptionService.getSubscriptionById(subscriptionId).getUser().getUsername();
+
         // Redirect back to the search_subscriptions page with the username as a parameter
-        redirectAttributes.addAttribute("username", "user1"); // Replace "user1" with the actual username
+        redirectAttributes.addAttribute("username", username);
         return "redirect:/admin/search_subscriptions";
     }
 
@@ -113,7 +117,7 @@ public class AdminController {
     public String getSubscriptionRequests(Model model) {
         List<SubscriptionRequest> subscriptionRequests = subscriptionRequestService.getAllSubscriptionRequests();
         model.addAttribute("subscriptionRequests", subscriptionRequests);
-        return "admin/subscription_requests"; // Make sure this template path is correct
+        return "admin/subscription_requests";
     }
 
     @PostMapping("/approve_request")

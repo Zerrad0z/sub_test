@@ -1,0 +1,35 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Optionally, define font styles for different weights and styles */
+/* Example: */
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* Your existing styles can remain unchanged */
+/* Ensure that body and other elements use the 'Roboto' font-family */
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+/* Sidebar styles and other existing styles */

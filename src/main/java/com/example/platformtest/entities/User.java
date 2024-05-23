@@ -2,6 +2,7 @@ package com.example.platformtest.entities;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,6 +31,8 @@ public class User {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.roles = new HashSet<>(); // Initialize roles set
+        this.roles.add(Role.ROLE_USER); // Add default role
     }
 
     public User() {

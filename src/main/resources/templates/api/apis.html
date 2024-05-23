@@ -2,60 +2,106 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
+
 <head>
     <title>APIs</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <style>
+        /* Custom styles */
+        .sticky-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: #0e2238;
+            z-index: 1000;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+            width: 100%;
+        }
+        .sticky-header h2 {
+            color: white;
+            text-align: center;
+            margin: 0;
+            font-size: 24px;
+        }
+        .sticky-search {
+            padding-top: 60px; /* Adjust to match the height of sticky header */
+        }
+        .sticky-search .input-group {
+            max-width: 500px; /* Adjust maximum width of search bar */
+            margin: 10px auto; /* Center align the search bar */
+        }
+        .content {
+            margin-top: 20px; /* Adjust margin-top to account for sticky header */
+        }
+        .btn-abonner {
+            float: right; /* Align 'Abonner' button to the right */
+            margin-left: 10px; /* Add margin between 'Abonner' and 'Documentation' buttons */
+        }
+    </style>
 </head>
+
 <body>
-<section layout:fragment="body">
-    <div class="container my-5">
-        <form th:action="@{/index}" method="get">
-            <input type="text" name="mc" th:value="${motCle}"/>
-            <button class="btn btn-primary">Chercher</button>
-        </form>
+<div layout:fragment="body">
+    <!-- Fixed Header -->
+    <div class="sticky-header">
         <div class="container">
-            <h3>Liste des API</h3>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>ID</th><th>Nom</th><th></th><th></th>
-                    <th th:if="${isAdmin}"></th>
-                    <th th:unless="${isAdmin}"></th>
-                    <th th:unless="${isAdmin}"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="a : ${listAPI}">
-                    <td th:text="${a.apiId}"></td>
-                    <td th:text="${a.nom}"></td>
-                    <!-- Display 'Edit' and 'Delete' for admin users -->
-                    <td th:if="${isAdmin}">
-                        <a th:href="@{edit(id=${a.apiId})}">Edit</a> |
-                        <a onclick="return confirm('Etes-vous sure?')" th:href="@{delete(id=${a.apiId},page=${pageCourante},size=${size},motCle=${motCle})}">Delete</a>
-                    </td>
-                    <!-- Display 'Abonner' and 'Documentation' for non-admin users -->
-                    <td th:unless="${isAdmin}">
-                        <a href="#" class="abonner-link" data-toggle="modal" th:data-target="'#myModal-' + ${a.apiId}">Abonner</a>
-                    </td>
-                    <td th:unless="${isAdmin}">
-                        <a th:href="@{/documentation}">Documentation</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <h2>Liste des API</h2>
         </div>
+    </div>
+
+    <!-- Sticky Search Bar -->
+    <div class="sticky-search">
         <div class="container">
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    <li th:each="pa,status:${pages}" th:class="${pageCourante} == ${status.index} ? 'page-item active' : 'page-item'">
-                        <a class="page-link" th:href="@{index(page=${status.index}, size=${size},mc=${motCle})}" th:text="${status.index}"></a>
-                    </li>
-                </ul>
-            </nav>
+            <form th:action="@{/index}" method="get">
+                <div class="input-group">
+                    <input type="text" name="mc" class="form-control" placeholder="Rechercher" th:value="${motCle}">
+                    <button type="submit" class="btn btn-primary">Chercher</button>
+                </div>
+            </form>
         </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container content my-5">
+        <div class="card">
+            <div class="card-body">
+                <h3>Liste des API</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr th:each="a : ${listAPI}">
+                            <td th:text="${a.nom}"></td>
+                            <td>
+                                <!-- Display 'Edit' and 'Delete' for admin users -->
+                                <div th:if="${isAdmin}">
+                                    <a th:href="@{/edit(id=${a.apiId})}" class="btn btn-sm btn-outline-primary">Modifier</a>
+                                    <a th:href="@{/delete(id=${a.apiId})}" onclick="return confirm('Etes-vous sûr?')" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                                </div>
+                                <!-- Display 'Abonner' and 'Documentation' for non-admin users -->
+                                <div th:unless="${isAdmin}">
+                                    <a href="#" class="btn btn-sm btn-outline-success btn-abonner" data-bs-toggle="modal" th:data-bs-target="'#myModal-' + ${a.apiId}">Abonner</a>
+                                    <a th:href="@{/documentation}" class="btn btn-sm btn-outline-info">Documentation</a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-4">
+                <li th:each="pa, status : ${pages}" th:class="${pageCourante} == ${status.index} ? 'page-item active' : 'page-item'">
+                    <a class="page-link" th:href="@{index(page=${status.index}, size=${size}, mc=${motCle})}" th:text="${status.index}"></a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <!-- Modal for Abonner -->
@@ -70,11 +116,11 @@
                     <!-- Form for subscription -->
                     <form th:action="@{/subscribe/request}" method="post">
                         <div class="mb-3">
-                            <label for="startDate">Date de début:</label>
+                            <label for="startDate" class="form-label">Date de début:</label>
                             <input type="date" id="startDate" name="startDate" class="form-control" required/>
                         </div>
                         <div class="mb-3">
-                            <label for="endDate">Date de fin:</label>
+                            <label for="endDate" class="form-label">Date de fin:</label>
                             <input type="date" id="endDate" name="endDate" class="form-control" required/>
                         </div>
                         <input type="hidden" name="apiId" th:value="${a.apiId}"/>
@@ -84,7 +130,7 @@
             </div>
         </div>
     </div>
-</section>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -98,4 +144,5 @@
 </script>
 
 </body>
+
 </html>

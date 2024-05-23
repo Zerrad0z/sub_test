@@ -2,37 +2,81 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
+
 <head>
     <meta charset="UTF-8">
     <title>Subscription Requests</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        .status-active {
+            color: green;
+        }
+        .status-inactive {
+            color: red;
+        }
+        .sticky-top {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: #0e2238; /* Adjust background color to match sidebar */
+            z-index: 1000;
+            border-bottom: 1px solid #dee2e6; /* Optional: Add a bottom border for separation */
+            padding: 10px 0;
+            margin-left: -15px; /* Remove default container padding */
+            margin-right: -15px; /* Remove default container padding */
+            left: 0;
+            right: 0;
+        }
+        .sticky-top .container {
+            padding-left: 15px; /* Restore left padding for container content */
+            padding-right: 15px; /* Restore right padding for container content */
+        }
+        .sticky-top h2 {
+            color: white; /* Make the text color white */
+            margin: 0; /* Remove default margin */
+        }
+    </style>
 </head>
 <body>
-<section layout:fragment="body">
-    <div class="container my-5">
-        <h2>Subscription Requests</h2>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>API</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="request : ${subscriptionRequests}">
-                <td th:text="${request.api.nom}"></td> <!-- Assuming API has nom field for API name -->
-                <td th:text="${request.startDate}"></td>
-                <td th:text="${request.endDate}"></td>
-                <td th:text="${request.getStatus()}"></td> <!-- Use getStatus() method -->
-            </tr>
-            </tbody>
-        </table>
+<div layout:fragment="body">
+    <!-- Fixed Header -->
+    <div class="sticky-top">
+        <div class="container">
+            <h2>Mes demandes d'autorisations</h2>
+        </div>
     </div>
-</section>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>De</th>
+                    <th>Expirée le</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="request : ${subscriptionRequests}">
+                    <td th:text="${request.api.nom}"></td> <!-- Assuming API has nom field for API name -->
+                    <td th:text="${request.startDate}"></td>
+                    <td th:text="${request.endDate}"></td>
+                    <td>
+                        <span th:class="${request.getStatus()} ? 'status-active' : 'status-inactive'">
+                            <span th:text="${request.getStatus()} ? 'Active' : 'Inactive'"></span>
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

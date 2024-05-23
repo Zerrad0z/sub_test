@@ -83,7 +83,7 @@
                                 </div>
                                 <!-- Display 'Abonner' and 'Documentation' for non-admin users -->
                                 <div th:unless="${isAdmin}">
-                                    <a href="#" class="btn btn-sm btn-outline-success btn-abonner" data-bs-toggle="modal" th:data-bs-target="'#myModal-' + ${a.apiId}">Abonner</a>
+                                    <a href="#" class="btn btn-sm btn-outline-success btn-abonner" data-bs-toggle="modal" th:data-bs-target="'#myModal-' + ${a.apiId}">demande d'accès</a>
                                     <a th:href="@{/documentation}" class="btn btn-sm btn-outline-info">Documentation</a>
                                 </div>
                             </td>
@@ -124,7 +124,7 @@
                             <input type="date" id="endDate" name="endDate" class="form-control" required/>
                         </div>
                         <input type="hidden" name="apiId" th:value="${a.apiId}"/>
-                        <button type="submit" class="btn btn-primary">S'abonner</button>
+                        <button type="submit" class="btn btn-primary">Valider</button>
                     </form>
                 </div>
             </div>

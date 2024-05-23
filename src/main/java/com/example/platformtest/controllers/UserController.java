@@ -1,5 +1,7 @@
 package com.example.platformtest.controllers;
 
+
+import com.example.platformtest.entities.Role;
 import com.example.platformtest.entities.SubscriptionRequest;
 import com.example.platformtest.entities.User;
 import com.example.platformtest.repositories.UserRepository;
@@ -18,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -82,6 +85,10 @@ public class UserController {
         User currentUser = getCurrentUser();
         model.addAttribute("username", currentUser.getUsername());
         model.addAttribute("email", currentUser.getEmail());
+        model.addAttribute("roles", currentUser.getRoles().stream()
+                .map(Role::name) // Use name() method to get the string representation of the enum constant
+                .collect(Collectors.joining(","))); // Ensure roles are added
+        model.addAttribute("userId", currentUser.getUserId());
         return "user/user_details";
     }
 

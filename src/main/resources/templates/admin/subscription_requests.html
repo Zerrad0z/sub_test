@@ -21,7 +21,7 @@
         }
         .sticky-header h2 {
             color: white;
-            text-align:;
+            text-align:center;
             margin: 0;
             font-size: 24px;
         }
@@ -91,21 +91,9 @@
     <!-- Sticky Search Bar -->
     <div class="sticky-header">
         <div class="container">
-            <h2>Gerer les demandes</h2>
+            <h2>Gestion des demandes</h2>
         </div>
     </div>
-    <div class="sticky-search">
-        <div class="container">
-            <form th:action="@{/admin/search_subscriptions}" method="get" class="form-inline">
-                <div class="form-group mb-2">
-                    <label for="username" class="sr-only">Username:</label>
-                    <input type="text" class="form-control mr-2" id="username" name="username" placeholder="Enter Username" required>
-                </div>
-                <button type="submit" class="btn btn-primary mb-2">Search</button>
-            </form>
-        </div>
-    </div>
-
     <!-- Main Content -->
     <div class="container content my-5">
         <table class="table">
@@ -125,7 +113,7 @@
                 <td th:text="${request.api.nom}"></td>
                 <td th:text="${request.startDate}"></td>
                 <td th:text="${request.endDate}"></td>
-                <td th:text="${request.getStatus()}"></td> <!-- Use getStatus() method -->
+                <td th:text="${request.getStatus()}"></td>
                 <td>
                     <!-- Custom Dropdown -->
                     <div class="dropdown">

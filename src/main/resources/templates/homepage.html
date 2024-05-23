@@ -5,15 +5,43 @@
       layout:decorate="~{layout}">
 
 <head>
-    <title>Home</title>
+    <title>Accueil</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+          crossorigin="anonymous"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .jumbotron {
+            background-color: #343a40;
+            color: #fff;
+            padding: 50px 20px;
+            margin-bottom: 50px;
+        }
+        h1 {
+            font-size: 3.5rem;
+        }
+        p {
+            font-size: 1.5rem;
+        }
+    </style>
 </head>
 
 <body>
-<div layout:fragment="body">
+<div layout:fragment="body" class="container">
 
-</div>
+    <div class="jumbotron">
+        <h1>Bienvenue à notre application de gestion des APIs</h1>
+    </div>
+    </div>
 </body>
-
 </html>

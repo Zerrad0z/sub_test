@@ -65,7 +65,7 @@ public class AdminController {
             subscriptionService.updateEndDate(subscriptionId, newEndDate);
         }
         // Redirect back to the search_subscriptions page with the username as a parameter
-        redirectAttributes.addAttribute("username", "user1"); // Replace "user1" with the actual username
+        redirectAttributes.addAttribute("username", "user1");
         return "redirect:/admin/search_subscriptions";
     }
 
@@ -112,7 +112,7 @@ public class AdminController {
         return "redirect:/admin/manage_users";
     }
 
-    // Method to display subscription requests for admin review
+    // Method to display subscription requests for admin
     @GetMapping("/subscription_requests")
     public String getSubscriptionRequests(Model model) {
         List<SubscriptionRequest> subscriptionRequests = subscriptionRequestService.getAllSubscriptionRequests();
@@ -129,6 +129,6 @@ public class AdminController {
     @PostMapping("/reject_request")
     public String rejectRequest(@RequestParam Long requestId) {
         subscriptionRequestService.rejectSubscriptionRequest(requestId);
-        return "redirect:/admin/subscription_requests"; // Redirect to view all requests after action
+        return "redirect:/admin/subscription_requests";
     }
 }

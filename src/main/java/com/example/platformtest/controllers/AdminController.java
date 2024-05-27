@@ -1,5 +1,6 @@
 package com.example.platformtest.controllers;
 
+import com.example.platformtest.entities.Role;
 import com.example.platformtest.entities.Subscription;
 import com.example.platformtest.entities.SubscriptionRequest;
 import com.example.platformtest.entities.User;
@@ -18,7 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/admin")
@@ -131,4 +136,22 @@ public class AdminController {
         subscriptionRequestService.rejectSubscriptionRequest(requestId);
         return "redirect:/admin/subscription_requests";
     }
+    @GetMapping("/create_user")
+    public String showCreateUserForm() {
+        return "admin/create_user";
+    }
+
+    @PostMapping("/create_user")
+    public String createUser(@RequestParam("username") String username,
+                             @RequestParam("email") String email,
+                             @RequestParam("password") String password,
+                             @RequestParam("roles") String roles) {
+        Set<Role> roleSet = Stream.of(roles.split(","))
+                .map(String::trim)
+                .map(Role::valueOf)
+                .collect(Collectors.toSet());
+        userService.createUser(username, email, password, roleSet);
+        return "redirect:/admin/create_user?success";
+    }
+
 }

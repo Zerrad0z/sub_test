@@ -42,7 +42,7 @@
                 <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                    data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
                     <i class="lni lni-layout"></i>
-                    <span>Gerer mes API</span>
+                    <span>Gérer mes API</span>
                 </a>
                 <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item">
@@ -53,8 +53,8 @@
                     </li>
                 </ul>
             </li>
-            <!-- Options for admin users -->
-            <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="sidebar-item">
+            <!-- Options for admin and super admin users -->
+            <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'') or hasRole(''ROLE_SUPERADMIN'')')}" class="sidebar-item">
                 <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                    data-bs-target="#admin" aria-expanded="false" aria-controls="admin">
                     <i class="lni lni-layout"></i>
@@ -62,13 +62,16 @@
                 </a>
                 <ul id="admin" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item">
-                        <a href="/admin/manage_subscriptions" class="sidebar-link"><i class="lni lni-agenda"></i> Gerer les abonnements</a>
+                        <a href="/admin/manage_subscriptions" class="sidebar-link"><i class="lni lni-agenda"></i> Gérer les approuvées</a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="/admin/manage_users" class="sidebar-link"><i class="lni lni-users"></i> Gerer les utilisateurs</a>
+                        <a href="/admin/manage_users" class="sidebar-link"><i class="lni lni-users"></i> Gérer les utilisateurs</a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="/admin/subscription_requests" class="sidebar-link"><i class="lni lni-envelope"></i> Gerer les demandes</a>
+                        <a href="/admin/subscription_requests" class="sidebar-link"><i class="lni lni-envelope"></i> Gérer les demandes</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="/create_user" class="sidebar-link"><i class="lni lni-envelope"></i> Creer des utilisateurs</a>
                     </li>
                 </ul>
             </li>
@@ -89,7 +92,7 @@
     </aside>
     <div class="main p-3">
         <div layout:fragment="body">
-
+            <!-- The body content will be inserted here -->
         </div>
     </div>
 </div>

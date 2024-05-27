@@ -4,6 +4,7 @@ import com.example.platformtest.entities.Role;
 import com.example.platformtest.entities.User;
 import com.example.platformtest.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
 
     @Override
     public List<User> getAllUsers() {
@@ -46,4 +52,20 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
+
+    @Override
+    public User createUser(String username, String email, String password, Set<Role> roles) {
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setEmail(email);
+        newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setRoles(roles);
+        return userRepository.save(newUser);
+    }
+
+    @Override
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
 }

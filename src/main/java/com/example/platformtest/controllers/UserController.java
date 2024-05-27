@@ -19,7 +19,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -116,6 +119,32 @@ public class UserController {
         model.addAttribute("pageCourante", page);
         model.addAttribute("motCle", mc);
         return "admin/manage_users";
+    }
+
+    @GetMapping("/create_user")
+    public String showCreateUserForm(Model model, Authentication authentication) {
+        String userRole = authentication.getAuthorities().iterator().next().getAuthority();
+        model.addAttribute("userRole", userRole);
+        if ("ROLE_SUPERADMIN".equals(userRole)) {
+            model.addAttribute("roles", Role.values());
+        }
+        return "create_user";
+    }
+
+    @PostMapping("/create_user")
+    public String createUser(@ModelAttribute User user, @RequestParam(value = "roles", required = false) String[] roles, Authentication authentication) {
+        String userRole = authentication.getAuthorities().iterator().next().getAuthority();
+        if ("ROLE_SUPERADMIN".equals(userRole) && roles != null) {
+            Set<Role> rolesSet = new HashSet<>();
+            for (String role : roles) {
+                rolesSet.add(Role.valueOf(role));
+            }
+            user.setRoles(rolesSet);
+        } else {
+            user.setRoles(Collections.singleton(Role.ROLE_USER));
+        }
+        userService.saveUser(user);
+        return "redirect:/user/manage_users";
     }
 
 }

@@ -24,12 +24,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/register", "/login", "/static/**").permitAll()
                         .requestMatchers("/listeDesApi", "/documentations").hasAuthority("ROLE_USER")
-                        .requestMatchers("/delete", "/edit").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/delete", "/edit").hasAuthority("ROLE_SUPERADMIN")
                         .requestMatchers("/abonner", "/subscription_requests").hasAuthority("ROLE_USER")
+                        .requestMatchers("/create_user").hasAuthority("ROLE_ADMIN,ROLE_SUPERADMIN")
+                        .requestMatchers("/superadmin/**").hasAuthority("ROLE_SUPERADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin

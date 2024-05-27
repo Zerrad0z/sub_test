@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Roles</title>
+</head>
+<body>
+<h2>Manage User Roles</h2>
+<form action="/superadmin/update_role" method="post">
+    <label for="user">User:</label>
+    <select id="user" name="userId" required>
+        <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.username}"></option>
+    </select><br><br>
+
+    <label for="roles">Roles:</label><br>
+    <select id="roles" name="roles" multiple required>
+        <option value="ROLE_USER">User</option>
+        <option value="ROLE_ADMIN">Admin</option>
+        <option value="ROLE_SUPER_ADMIN">Super Admin</option>
+    </select><br><br>
+
+    <input type="submit" value="Update Roles">
+</form>
+</body>
+</html>

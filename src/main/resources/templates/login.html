@@ -20,7 +20,7 @@
                     </div>
                     <div th:if="${!isAuthenticated}">
                         <div class="alert alert-warning">
-                            <p class="text-center">Veuillez vous connecter ou vous inscrire pour continuer..</p>
+                            <p class="text-center">Veuillez vous connecter pour continuer..</p>
                         </div>
                         <div class="card mb-3">
                             <div class="card-header bg-light">
@@ -42,7 +42,6 @@
                                 </form>
                             </div>
                         </div>
-                        <p class="text-center mb-0">Vous n'avez pas de compte ? <a th:href="@{/register}">S'inscrire</a></p>
                     </div>
                 </div>
             </div>

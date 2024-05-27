@@ -44,10 +44,10 @@ public class APIController {
         // Check the user's roles
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        boolean isAdmin = authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+        boolean isSuperAdmin = authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_SUPERADMIN"));
 
         // Add the user's role to the model
-        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("isSuperAdmin", isSuperAdmin);
         return "api/apis";
     }
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
